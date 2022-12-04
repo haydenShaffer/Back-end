@@ -6,3 +6,12 @@ function deleteNote(noteId){
         window.location.href="/"
     });
 }
+
+function deleteComments(commentsId){
+    fetch('/delete-comments', {
+        method: 'POST',
+        body: JSON.stringify({commentsId: commentsId}),
+    }).then((_res) => {
+        window.location.href="/"
+    });
+}

@@ -23,7 +23,7 @@ def login():
         else:
             flash('No account with that email', category='error')    
     
-    return render_template("login.html", user=current_user)
+    return render_template("login.html", this_user=current_user)
 
 @auth.route('/logout')
 @login_required
@@ -52,7 +52,7 @@ def sign_up():
         elif password1 != password2:
             flash('Passwords do not match!', category='error')
         else:
-            new_user = User(email=email, first_name=firstName, password=generate_password_hash(password1, method='sha256'))
+            new_user = User(email=email, first_name=firstName, password=generate_password_hash(password1, method='sha256'), page_id = 1)
             db.session.add(new_user)
             db.session.commit()
             flash('Account created!', category='success')
@@ -61,4 +61,4 @@ def sign_up():
             
             
 
-    return render_template("sign_up.html",user=current_user)
+    return render_template("sign_up.html",this_user=current_user)

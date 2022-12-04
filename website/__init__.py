@@ -19,16 +19,19 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
-
+    
     from .views import views
     from .auth import auth
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
-    from .models import User, Note
+    from .models import User, Note, Page
     
     with app.app_context():
         db.create_all()
+        new_Page=Page()
+        db.session.add(new_Page)
+        db.session.commit()
 
     login_manager= LoginManager()
     login_manager.login_view = 'auth.login'
