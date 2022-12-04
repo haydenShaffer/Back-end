@@ -1,21 +1,108 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content%}
-<h1 align="center">Notes</h1>
+<h1 align="center">Welcome to the message board!</h1>
 <ul class="list-group list-group-flush" id="notes">
-  {% for note in user.notes %}
-  <li class="list-group-item">
-    {{note.data}}
-    <button type="button" class="close" onclick="deleteNote({{ note.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </li>
+  {% for note in page.notes%}
 
-  {%endfor%}
-</ul>
-<form method="POST">
-  <textarea name="note" id="note" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary">Add Note</button>
+  <div class="row d-flex justify-content-center">
+    <div class="col-md-12 col-lg-10 col-xl-8">
+      <div class="card">
+        <button type="button" class="close" onclick="deleteNote({{ note.id }})">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="card-body">
+          <div class="d-flex flex-start align-items-center">
+            <div>
+              <h6 class="fw-bold text-primary mb-1">{{note.created_by}}</h6>
+            </div>
+          </div>
+
+          <p class="mt-3 mb-4 pb-2">{{note.data}}</p>
+        </div>
+
+        {%for comments in note.comments%}
+
+        <div class="border-3">
+          <div class="card-footer py-1" style="background-color: #ffffff">
+            <div class="row">
+              <div class="col">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  fill="currentColor"
+                  class="bi bi-arrow-down"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"
+                  />
+                </svg>
+                <h6 class="fw-bold text-primary">{{comments.created_by}}</h6>
+              </div>
+              <div class="col">
+                <button
+                  type="button"
+                  class="close"
+                  onclick="deleteComments({{ comments.id }})"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <p class="commentsD">{{comments.data}}</p>
+          </div>
+        </div>
+
+        {%endfor%}
+        <div
+          class="card-footer py-2 border-2"
+          style="background-color: #ffffff"
+        >
+          <form method="POST">
+            <div class="d-flex flex-start w-100">
+              <div class="form-outline w-100">
+                <input
+                  type="hidden"
+                  id="noteId"
+                  name="noteId"
+                  value="{{note.id}}"
+                />
+                <textarea
+                  class="form-control"
+                  id="comment"
+                  name="comment"
+                  rows="4"
+                  style="background: #fff"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="float-end mt-2 pt-1">
+              <button type="submit" class="btn btn-primary btn-sm">
+                Post comment
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-</form>
+  {%endfor%}
+
+  <form method="POST">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-12 col-lg-10 col-xl-8">
+        <textarea name="note" id="note" class="form-control"></textarea>
+        <br />
+        <div align="center">
+          <button type="submit" class="btn btn-primary">Add Note</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</ul>
+
 {% endblock %}
