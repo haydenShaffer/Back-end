@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request,flash,jsonify
+from flask import Blueprint, render_template, request,flash,jsonify, redirect, url_for
 from flask_login import  login_required, current_user
-from .models import Note, Page,Comments
+from .models import Note, Page,Comments, User
+from sqlalchemy import update
 from . import db
 import json 
+from werkzeug.security import generate_password_hash
 
 views = Blueprint('views',__name__)
 
@@ -12,7 +14,6 @@ def home():
     
     if request.method == 'POST':
         noteId=request.form.get('noteId')
-        print(noteId)
         note= request.form.get('note')
         comment = request.form.get('comment')
         if note:          
@@ -27,6 +28,46 @@ def home():
             flash('Post created', category='success')
     page= Page.query.get(1)
     return render_template("home.html", this_user=current_user, page=page)
+
+@views.route('/account', methods=['GET', 'POST'])
+@login_required
+def account():
+    if request.method == 'POST':
+        new_email=request.form.get('new_email')
+        print(new_email)
+        new_password=request.form.get('new_password')
+        new_name=request.form.get('new_name')
+        if new_email:
+            emailExist = User.query.filter_by(email= new_email.lower()).first()
+            if emailExist:
+                flash('Account with that email already exists',category='error')
+            elif len(new_email)< 4:
+                flash('Email is too short!', category='error')
+            else:
+                user=current_user
+                user.email = new_email.lower()
+                db.session.commit()
+                flash('Email Changed', category='success')
+                return redirect(url_for("auth.logout"))
+        if new_password:
+            if len(new_password)<8:
+                flash('Password must be at least 8 characters!', category='error')
+            else:    
+                user=current_user
+                user.password = generate_password_hash(new_password, method='sha256')
+                db.session.commit()
+                flash('Password Changed', category='success')
+                return redirect(url_for("auth.logout"))
+        if new_name:
+            if len(new_name)< 2:
+                flash('First name must be more than 1 character!', category='error')
+            else:
+                user=current_user
+                user.first_name = new_name
+                db.session.commit()
+                flash('Name Changed', category='success')
+                return redirect(url_for("auth.logout"))
+    return render_template("account.html", this_user=current_user)
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():

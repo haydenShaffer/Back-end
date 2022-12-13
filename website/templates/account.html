@@ -1,0 +1,58 @@
+{% extends "base.html" %} {% block title %}Account Management{% endblock %} {%
+block content%}
+<div class="container">
+  <div class="row">
+    <div class="col-1"></div>
+    <div class="col">
+      <div class="container">
+        <div class="row border">
+          <h1>Account Management</h1>
+        </div>
+        <div class="row border">
+          <form method="POST">
+            <div class="d-flex flex-start w-100">
+              <div class="form-outline w-100">
+                <input type="email" id="new_email" name="new_email" />
+              </div>
+              <ul>
+                <button type="submit" class="btn btn-primary btn-small">
+                  Change Email
+                </button>
+              </ul>
+            </div>
+          </form>
+        </div>
+        <div class="row border">
+          <form method="POST">
+            <div class="d-flex flex-start w-100">
+              <div class="form-outline w-100">
+                <input type="text" id="new_password" name="new_password" />
+              </div>
+              <ul>
+                <button type="submit" class="btn btn-primary btn-small">
+                  Change Password
+                </button>
+              </ul>
+            </div>
+          </form>
+        </div>
+        <div class="row border">
+          <form method="POST">
+            <div class="d-flex flex-start w-100">
+              <div class="form-outline w-100">
+                <input type="text" id="new_name" name="new_name" />
+              </div>
+              <ul>
+                <button type="submit" class="btn btn-primary btn-small">
+                  Change Name
+                </button>
+              </ul>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-1"></div>
+  </div>
+</div>
+{% endblock %}

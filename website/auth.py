@@ -12,7 +12,7 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email.lower()).first()
         if user:
             if check_password_hash(user.password, password):
                 flash('Logged in succesfully!', category='success')
@@ -39,7 +39,7 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email= email.lower()).first()
 
         if user:
             flash('Account with that email already exists',category='error')
@@ -52,7 +52,7 @@ def sign_up():
         elif password1 != password2:
             flash('Passwords do not match!', category='error')
         else:
-            new_user = User(email=email, first_name=firstName, password=generate_password_hash(password1, method='sha256'), page_id = 1)
+            new_user = User(email=email.lower(), first_name=firstName, password=generate_password_hash(password1, method='sha256'), page_id = 1)
             db.session.add(new_user)
             db.session.commit()
             flash('Account created!', category='success')
